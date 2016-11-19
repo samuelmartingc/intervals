@@ -51,10 +51,10 @@ public class IntervalBuilder {
 
         // sort the rope
         Collections.sort(knottedRope);
-        System.out.println("rope");
-        for (Knot i : knottedRope) {
-            System.out.println(i);
-        }
+//        System.out.println("rope");
+//        for (Knot i : knottedRope) {
+//            System.out.println(i);
+//        }
 
         return knottedRope;
     }

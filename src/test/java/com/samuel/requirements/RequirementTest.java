@@ -5,6 +5,7 @@ import com.samuel.models.Interval;
 import com.samuel.models.Knot;
 import jdk.nashorn.internal.objects.Global;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -120,4 +121,28 @@ public class RequirementTest {
         assertEquals(result,intervalBuilder.preventOverlapping(intervalBuilder.resolve(knots))); //short this
     }
 
+    @Test
+    @Ignore
+    public void performance(){
+        for (int k = 1000; k < 1000000; k = k*2){ //size
+            long time = 0;
+            for (int z = 0; z< 100; z++){ // average
+                included = new ArrayList<>();
+                excluded = new ArrayList<>();
+                for (int i = 0; i< k; i= i+2){ //fill lists
+                    if (i%4==0){
+                        included.add(new Interval(i,i+1));
+                    } else {
+                        excluded.add(new Interval(i,i+1));
+                    }
+                }
+                long start = System.currentTimeMillis();
+                List<Knot> knots = intervalBuilder.createKnottedRope(included,excluded);
+                intervalBuilder.preventOverlapping(intervalBuilder.resolve(knots)); //short this
+                long end = System.currentTimeMillis();
+                time += end-start;
+            }
+            System.out.println("average with k= " + k + ": -> " + time/20);
+        }
+    }
 }
