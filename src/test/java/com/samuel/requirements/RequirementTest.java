@@ -3,6 +3,7 @@ package com.samuel.requirements;
 import com.samuel.builders.IntervalBuilder;
 import com.samuel.models.Interval;
 import com.samuel.models.Knot;
+import jdk.nashorn.internal.objects.Global;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -26,9 +27,13 @@ public class RequirementTest {
     private Interval interval_50_5000;
     private Interval interval_10_5000;
     private Interval interval_200_300;
+    private Interval interval_400_500;
     private Interval interval_95_205;
+    private Interval interval_410_420;
     private Interval interval_10_94;
     private Interval interval_206_300;
+    private Interval interval_400_409;
+    private Interval interval_421_500;
 
     private List<Interval> included;
     private List<Interval> excluded;
@@ -45,9 +50,13 @@ public class RequirementTest {
         interval_50_5000 = new Interval(50,5000);
         interval_10_5000 = new Interval(10,5000);
         interval_200_300 = new Interval(200,300);
+        interval_400_500 = new Interval(400,500);
         interval_95_205 = new Interval(95,205);
+        interval_410_420 = new Interval(410,420);
         interval_10_94 = new Interval(10,94);
         interval_206_300 = new Interval(206,300);
+        interval_400_409 = new Interval(400,409);
+        interval_421_500 = new Interval(421,500);
         included = new ArrayList<>();
         excluded = new ArrayList<>();
         result = new ArrayList<>();
@@ -66,17 +75,49 @@ public class RequirementTest {
 
     @Test
     public void ex2() {
+        included.add(interval_50_5000);
+        included.add(interval_10_100);
+        result.add(interval_10_5000);
 
+        intervalBuilder.preventOverlapping(included);
+        intervalBuilder.preventOverlapping(excluded);
+
+        List<Knot> knots = intervalBuilder.createKnottedRope(included,excluded);
+        assertEquals(result,intervalBuilder.preventOverlapping(intervalBuilder.resolve(knots))); //short this
     }
 
     @Test
     public void ex3() {
+        included.add(interval_10_100);
+        included.add(interval_200_300);
+        excluded.add(interval_95_205);
+        result.add(interval_10_94);
+        result.add(interval_206_300);
 
+        intervalBuilder.preventOverlapping(included);
+        intervalBuilder.preventOverlapping(excluded);
+
+        List<Knot> knots = intervalBuilder.createKnottedRope(included,excluded);
+        assertEquals(result,intervalBuilder.preventOverlapping(intervalBuilder.resolve(knots))); //short this
     }
 
     @Test
     public void ex4() {
+        included.add(interval_10_100);
+        included.add(interval_200_300);
+        included.add(interval_400_500);
+        excluded.add(interval_95_205);
+        excluded.add(interval_410_420);
+        result.add(interval_10_94);
+        result.add(interval_206_300);
+        result.add(interval_400_409);
+        result.add(interval_421_500);
 
+        intervalBuilder.preventOverlapping(included);
+        intervalBuilder.preventOverlapping(excluded);
+
+        List<Knot> knots = intervalBuilder.createKnottedRope(included,excluded);
+        assertEquals(result,intervalBuilder.preventOverlapping(intervalBuilder.resolve(knots))); //short this
     }
 
 }

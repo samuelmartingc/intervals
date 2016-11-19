@@ -14,7 +14,7 @@ import java.util.List;
 public class IntervalBuilder {
     public List<Interval> preventOverlapping(List<Interval> intervals){
 
-        if(intervals.size() == 0 || intervals.size() == 1)
+        if(intervals == null || intervals.isEmpty() || intervals.size() == 1)
             return intervals;
         Collections.sort(intervals, new IntervalComparator());
 
@@ -63,30 +63,39 @@ public class IntervalBuilder {
         List<Interval> result = new ArrayList<>();
         boolean isInterval = false;
         boolean isGap = false;
+        boolean isFirstStartPoint = true; // without this, if there is two consecutive starts, the second overrides the first
         int intervalStart = 0;
         for (Knot point : knottedRope) {
             switch (point.getType()) {
                 case First:
                     if (!isGap) {
-                        intervalStart = point.getValue();
+                        if (isFirstStartPoint){
+                            intervalStart = point.getValue();
+                        }
+                        isFirstStartPoint = false;
                     }
                     isInterval = true;
                     break;
                 case FirstGap:
                     if (isInterval) {
-                        result.add(new Interval(intervalStart, point.getValue()));
+                        result.add(new Interval(intervalStart, point.getValue() -1));
+                        isFirstStartPoint = true;
                     }
                     isGap = true;
                     break;
                 case Last:
                     if (!isGap) {
                         result.add(new Interval(intervalStart, point.getValue()));
+                        isFirstStartPoint = true;
                     }
                     isInterval = false;
                     break;
                 case LastGap:
                     if (isInterval) {
-                        intervalStart = point.getValue();
+                        if (isFirstStartPoint) {
+                            intervalStart = point.getValue() + 1;
+                        }
+                        isFirstStartPoint = false;
                     }
                     isGap = false;
                     break;
