@@ -2,12 +2,10 @@ package com.samuel;
 
 import com.samuel.models.Interval;
 import com.samuel.builders.IntervalBuilder;
-import com.samuel.models.Knot;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 @SpringBootApplication
@@ -15,7 +13,6 @@ public class IntervalsApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(IntervalsApplication.class, args);
-
 
         //input data
         Interval interval1 = new Interval(-1,10);
@@ -42,42 +39,12 @@ public class IntervalsApplication {
         excluded.add(interval6);
         excluded.add(interval7);
 
-        //flatten data
-        included = intervalBuilder.preventOverlapping(included);
+        List<Interval> result = intervalBuilder.build(included,excluded);
 
-        System.out.println("Included");
-        for(Interval i : included) {
-            System.out.println(i);
-        }
-
-        excluded = intervalBuilder.preventOverlapping(excluded);
-
-        System.out.println("Excluded");
-        for(Interval i : excluded) {
-            System.out.println(i);
-        }
-
-
-        //create string with knots(events)
-        List<Knot> knottedRope =  intervalBuilder.createKnottedRope(included, excluded);
-
-        //process knots
-        List<Interval> result = intervalBuilder.resolve(knottedRope);
-
-        System.out.println("Result without preventing overlapping");
-        for (Interval i : result) {
-            System.out.println(i);
-        }
-
-        //flatten data
-        System.out.println("Result with merge");
+        System.out.println("Result");
         result = intervalBuilder.preventOverlapping(result);
         for (Interval i : result) {
             System.out.println(i);
         }
-
     }
-
-
-
 }

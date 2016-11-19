@@ -12,6 +12,12 @@ import java.util.List;
  * Created by samuel on 19/11/16.
  */
 public class IntervalBuilder {
+
+    public List<Interval> build (List<Interval> included, List<Interval> excluded) {
+        List<Knot> knots = createKnottedRope(preventOverlapping(included), preventOverlapping(excluded));
+        return preventOverlapping(resolve(knots));
+    }
+
     public List<Interval> preventOverlapping(List<Interval> intervals){
 
         if(intervals == null || intervals.isEmpty() || intervals.size() == 1)
@@ -36,8 +42,6 @@ public class IntervalBuilder {
         return result;
     }
 
-
-
     public List<Knot> createKnottedRope(List<Interval> included, List<Interval> excluded) {
         List<Knot> knottedRope = new ArrayList<>();
         for (Interval i : included) {
@@ -48,14 +52,8 @@ public class IntervalBuilder {
             knottedRope.add(new Knot(i.getFirst(), Knot.PointType.FirstGap));
             knottedRope.add(new Knot(i.getLast(), Knot.PointType.LastGap));
         }
-
         // sort the rope
         Collections.sort(knottedRope);
-//        System.out.println("rope");
-//        for (Knot i : knottedRope) {
-//            System.out.println(i);
-//        }
-
         return knottedRope;
     }
 
@@ -102,7 +100,6 @@ public class IntervalBuilder {
             }
         }
         return result;
-
     }
 
 }

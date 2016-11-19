@@ -2,8 +2,6 @@ package com.samuel.requirements;
 
 import com.samuel.builders.IntervalBuilder;
 import com.samuel.models.Interval;
-import com.samuel.models.Knot;
-import jdk.nashorn.internal.objects.Global;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -15,8 +13,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -70,8 +66,7 @@ public class RequirementTest {
         result.add(interval_10_19);
         result.add(interval_31_100);
 
-        List<Knot> knots = intervalBuilder.createKnottedRope(included,excluded);
-        assertEquals(result,intervalBuilder.resolve(knots));
+        assertEquals(result,intervalBuilder.build(included,excluded));
     }
 
     @Test
@@ -80,11 +75,7 @@ public class RequirementTest {
         included.add(interval_10_100);
         result.add(interval_10_5000);
 
-        intervalBuilder.preventOverlapping(included);
-        intervalBuilder.preventOverlapping(excluded);
-
-        List<Knot> knots = intervalBuilder.createKnottedRope(included,excluded);
-        assertEquals(result,intervalBuilder.preventOverlapping(intervalBuilder.resolve(knots))); //short this
+        assertEquals(result,intervalBuilder.build(included,excluded));
     }
 
     @Test
@@ -95,11 +86,7 @@ public class RequirementTest {
         result.add(interval_10_94);
         result.add(interval_206_300);
 
-        intervalBuilder.preventOverlapping(included);
-        intervalBuilder.preventOverlapping(excluded);
-
-        List<Knot> knots = intervalBuilder.createKnottedRope(included,excluded);
-        assertEquals(result,intervalBuilder.preventOverlapping(intervalBuilder.resolve(knots))); //short this
+        assertEquals(result,intervalBuilder.build(included,excluded));
     }
 
     @Test
@@ -114,17 +101,13 @@ public class RequirementTest {
         result.add(interval_400_409);
         result.add(interval_421_500);
 
-        intervalBuilder.preventOverlapping(included);
-        intervalBuilder.preventOverlapping(excluded);
-
-        List<Knot> knots = intervalBuilder.createKnottedRope(included,excluded);
-        assertEquals(result,intervalBuilder.preventOverlapping(intervalBuilder.resolve(knots))); //short this
+        assertEquals(result,intervalBuilder.build(included,excluded));
     }
 
     @Test
     @Ignore
     public void performance(){
-        for (int k = 1000; k < 1000000; k = k*2){ //size
+        for (int k = 1000; k < 10000000; k = k*2){ //size
             long time = 0;
             for (int z = 0; z< 100; z++){ // average
                 included = new ArrayList<>();
@@ -137,12 +120,11 @@ public class RequirementTest {
                     }
                 }
                 long start = System.currentTimeMillis();
-                List<Knot> knots = intervalBuilder.createKnottedRope(included,excluded);
-                intervalBuilder.preventOverlapping(intervalBuilder.resolve(knots)); //short this
+                intervalBuilder.build(included,excluded);
                 long end = System.currentTimeMillis();
                 time += end-start;
             }
-            System.out.println("average with k= " + k + ": -> " + time/20);
+            System.out.println("average with k= " + k + ": -> " + time/100);
         }
     }
 }
