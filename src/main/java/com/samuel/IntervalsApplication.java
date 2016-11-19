@@ -1,50 +1,42 @@
 package com.samuel;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.samuel.models.Interval;
 import com.samuel.builders.IntervalBuilder;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
+
 
 @SpringBootApplication
 public class IntervalsApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(IntervalsApplication.class, args);
+        resolveIntervals(args);
 
-        //input data
-        Interval interval1 = new Interval(-1,10);
-        Interval interval2 = new Interval(9,20);
-        Interval interval3 = new Interval(19,30);
-        Interval interval4 = new Interval(40,50);
-        Interval interval5 = new Interval(45,60);
-        Interval intervalA = new Interval(46,59);
+    }
 
-        Interval interval6 = new Interval(5,10);
-        Interval interval7 = new Interval(55,60);
-
-        IntervalBuilder intervalBuilder = new IntervalBuilder();
-
-        List<Interval> included = new ArrayList<>();
-        included.add(interval1);
-        included.add(interval2);
-        included.add(interval3);
-        included.add(interval4);
-        included.add(interval5);
-        included.add(intervalA);
-
-        List<Interval> excluded = new ArrayList<>();
-        excluded.add(interval6);
-        excluded.add(interval7);
-
-        List<Interval> result = intervalBuilder.build(included,excluded);
-
-        System.out.println("Result");
-        result = intervalBuilder.preventOverlapping(result);
-        for (Interval i : result) {
-            System.out.println(i);
+    private static void resolveIntervals(String[] args) {
+        if (args.length == 0){
+            System.out.println("Arguments are required -> \"[{\"first\":50,\"last\":100}]\"");
+            return;
         }
+        Type listIntervals = new TypeToken<ArrayList<Interval>>(){}.getType();
+        Gson gson = new Gson();
+        IntervalBuilder intervalBuilder = new IntervalBuilder();
+            List<Interval> included = gson.fromJson(args[0] , listIntervals);
+            List<Interval> excluded = (args.length == 1)?  new ArrayList<>(): gson.fromJson(args[1] , listIntervals);
+            List<Interval> result = intervalBuilder.build(included,excluded);
+
+            System.out.println("Result");
+            result = intervalBuilder.preventOverlapping(result);
+            for (Interval i : result) {
+                System.out.println(i);
+            }
     }
 }
