@@ -17,20 +17,20 @@ import static org.junit.Assert.assertEquals;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class RequirementTest {
-    private Interval interval_10_100;
-    private Interval interval_20_30;
-    private Interval interval_10_19;
-    private Interval interval_31_100;
-    private Interval interval_50_5000;
-    private Interval interval_10_5000;
-    private Interval interval_200_300;
-    private Interval interval_400_500;
-    private Interval interval_95_205;
-    private Interval interval_410_420;
-    private Interval interval_10_94;
-    private Interval interval_206_300;
-    private Interval interval_400_409;
-    private Interval interval_421_500;
+    private Interval interval_10_100 = new Interval(10,100);
+    private Interval interval_20_30 = new Interval(20,30);
+    private Interval interval_10_19 = new Interval(10,19);
+    private Interval interval_31_100 = new Interval(31,100);
+    private Interval interval_50_5000 = new Interval(50,5000);
+    private Interval interval_10_5000 = new Interval(10,5000);
+    private Interval interval_200_300 = new Interval(200,300);
+    private Interval interval_400_500 = new Interval(400,500);
+    private Interval interval_95_205 = new Interval(95,205);
+    private Interval interval_410_420 = new Interval(410,420);
+    private Interval interval_10_94 = new Interval(10,94);
+    private Interval interval_206_300 = new Interval(206,300);
+    private Interval interval_400_409 = new Interval(400,409);
+    private Interval interval_421_500 = new Interval(421,500);
 
     private List<Interval> included;
     private List<Interval> excluded;
@@ -40,20 +40,7 @@ public class RequirementTest {
 
     @Before
     public void init(){
-        interval_10_100 = new Interval(10,100);
-        interval_20_30 = new Interval(20,30);
-        interval_10_19 = new Interval(10,19);
-        interval_31_100 = new Interval(31,100);
-        interval_50_5000 = new Interval(50,5000);
-        interval_10_5000 = new Interval(10,5000);
-        interval_200_300 = new Interval(200,300);
-        interval_400_500 = new Interval(400,500);
-        interval_95_205 = new Interval(95,205);
-        interval_410_420 = new Interval(410,420);
-        interval_10_94 = new Interval(10,94);
-        interval_206_300 = new Interval(206,300);
-        interval_400_409 = new Interval(400,409);
-        interval_421_500 = new Interval(421,500);
+
         included = new ArrayList<>();
         excluded = new ArrayList<>();
         result = new ArrayList<>();
