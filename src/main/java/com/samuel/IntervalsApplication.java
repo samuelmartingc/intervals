@@ -59,10 +59,10 @@ public class IntervalsApplication {
 
 
         //create string with knots(events)
-        List<Knot> knottedRope = createKnottedRope(included, excluded);
+        List<Knot> knottedRope =  intervalBuilder.createKnottedRope(included, excluded);
 
         //process knots
-        List<Interval> result = resolve(knottedRope);
+        List<Interval> result = intervalBuilder.resolve(knottedRope);
 
         System.out.println("Result without preventing overlapping");
         for (Interval i : result) {
@@ -78,62 +78,6 @@ public class IntervalsApplication {
 
     }
 
-    private static List<Knot> createKnottedRope(List<Interval> included, List<Interval> excluded) {
-        List<Knot> knottedRope = new ArrayList<>();
-        for (Interval i : included) {
-            knottedRope.add(new Knot(i.getFirst(), Knot.PointType.First));
-            knottedRope.add(new Knot(i.getLast(), Knot.PointType.Last));
-        }
-        for (Interval i : excluded) {
-            knottedRope.add(new Knot(i.getFirst(), Knot.PointType.FirstGap));
-            knottedRope.add(new Knot(i.getLast(), Knot.PointType.LastGap));
-        }
 
-        // sort the rope
-        Collections.sort(knottedRope);
-        System.out.println("rope");
-        for (Knot i : knottedRope) {
-            System.out.println(i);
-        }
-
-        return knottedRope;
-    }
-
-    private static List<Interval> resolve(List<Knot> knottedRope) {
-        List<Interval> result = new ArrayList<>();
-        boolean isInterval = false;
-        boolean isGap = false;
-        int intervalStart = 0;
-        for (Knot point : knottedRope) {
-            switch (point.getType()) {
-                case First:
-                    if (!isGap) {
-                        intervalStart = point.getValue();
-                    }
-                    isInterval = true;
-                    break;
-                case FirstGap:
-                    if (isInterval) {
-                        result.add(new Interval(intervalStart, point.getValue()));
-                    }
-                    isGap = true;
-                    break;
-                case Last:
-                    if (!isGap) {
-                        result.add(new Interval(intervalStart, point.getValue()));
-                    }
-                    isInterval = false;
-                    break;
-                case LastGap:
-                    if (isInterval) {
-                        intervalStart = point.getValue();
-                    }
-                    isGap = false;
-                    break;
-            }
-        }
-        return result;
-
-	}
 
 }

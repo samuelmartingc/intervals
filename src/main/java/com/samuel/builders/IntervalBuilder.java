@@ -2,6 +2,7 @@ package com.samuel.builders;
 
 import com.samuel.models.Interval;
 import com.samuel.models.IntervalComparator;
+import com.samuel.models.Knot;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -33,6 +34,66 @@ public class IntervalBuilder {
         }
         result.add(new Interval(start, end));
         return result;
+    }
+
+
+
+    public List<Knot> createKnottedRope(List<Interval> included, List<Interval> excluded) {
+        List<Knot> knottedRope = new ArrayList<>();
+        for (Interval i : included) {
+            knottedRope.add(new Knot(i.getFirst(), Knot.PointType.First));
+            knottedRope.add(new Knot(i.getLast(), Knot.PointType.Last));
+        }
+        for (Interval i : excluded) {
+            knottedRope.add(new Knot(i.getFirst(), Knot.PointType.FirstGap));
+            knottedRope.add(new Knot(i.getLast(), Knot.PointType.LastGap));
+        }
+
+        // sort the rope
+        Collections.sort(knottedRope);
+        System.out.println("rope");
+        for (Knot i : knottedRope) {
+            System.out.println(i);
+        }
+
+        return knottedRope;
+    }
+
+    public List<Interval> resolve(List<Knot> knottedRope) {
+        List<Interval> result = new ArrayList<>();
+        boolean isInterval = false;
+        boolean isGap = false;
+        int intervalStart = 0;
+        for (Knot point : knottedRope) {
+            switch (point.getType()) {
+                case First:
+                    if (!isGap) {
+                        intervalStart = point.getValue();
+                    }
+                    isInterval = true;
+                    break;
+                case FirstGap:
+                    if (isInterval) {
+                        result.add(new Interval(intervalStart, point.getValue()));
+                    }
+                    isGap = true;
+                    break;
+                case Last:
+                    if (!isGap) {
+                        result.add(new Interval(intervalStart, point.getValue()));
+                    }
+                    isInterval = false;
+                    break;
+                case LastGap:
+                    if (isInterval) {
+                        intervalStart = point.getValue();
+                    }
+                    isGap = false;
+                    break;
+            }
+        }
+        return result;
+
     }
 
 }
