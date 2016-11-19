@@ -11,7 +11,7 @@ import java.util.List;
  * Created by samuel on 19/11/16.
  */
 public class IntervalBuilder {
-    public List<Interval> build (List<Interval> intervals){
+    public List<Interval> preventOverlapping(List<Interval> intervals){
 
         if(intervals.size() == 0 || intervals.size() == 1)
             return intervals;
@@ -34,4 +34,5 @@ public class IntervalBuilder {
         result.add(new Interval(start, end));
         return result;
     }
+
 }
