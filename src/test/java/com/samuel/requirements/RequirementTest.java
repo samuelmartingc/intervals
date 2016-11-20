@@ -17,6 +17,7 @@ import static org.junit.Assert.assertEquals;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class RequirementTest {
+    public static final int AVG_MAX = 100;
     private Interval interval_10_100 = new Interval(10,100);
     private Interval interval_20_30 = new Interval(20,30);
     private Interval interval_10_19 = new Interval(10,19);
@@ -92,26 +93,26 @@ public class RequirementTest {
     }
 
     @Test
-    @Ignore
+    @Ignore("too long")
     public void performance(){
-        for (int k = 1000; k < 10000000; k = k*2){ //size
+        for (int numElems = 1000; numElems < 8000000; numElems = numElems*2){
             long time = 0;
-            for (int z = 0; z< 100; z++){ // average
+            for (int countAverage = 0; countAverage< AVG_MAX; countAverage++){
                 included = new ArrayList<>();
                 excluded = new ArrayList<>();
-                for (int i = 0; i< k; i= i+2){ //fill lists
+                for (int i = 0; i< numElems; i=i+2){ //fill lists
                     if (i%4==0){
                         included.add(new Interval(i,i+1));
                     } else {
                         excluded.add(new Interval(i,i+1));
                     }
                 }
-                long start = System.currentTimeMillis();
+                long start = System.nanoTime();
                 intervalBuilder.build(included,excluded);
-                long end = System.currentTimeMillis();
+                long end = System.nanoTime();
                 time += end-start;
             }
-            System.out.println("average with k= " + k + ": -> " + time/100);
+            System.out.println("average with numElems= " + numElems + ": -> " + (time/AVG_MAX)/1000 );
         }
     }
 }

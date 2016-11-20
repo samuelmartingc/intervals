@@ -34,7 +34,6 @@ public class IntervalsApplication {
             List<Interval> result = intervalBuilder.build(included,excluded);
 
             System.out.println("Result");
-            result = intervalBuilder.preventOverlapping(result);
             for (Interval i : result) {
                 System.out.println(i);
             }

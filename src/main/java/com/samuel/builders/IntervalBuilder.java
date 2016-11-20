@@ -18,16 +18,22 @@ public class IntervalBuilder {
         return preventOverlapping(resolve(knots));
     }
 
-    public List<Interval> preventOverlapping(List<Interval> intervals){
-
-        if(intervals == null || intervals.isEmpty() || intervals.size() == 1)
+    private List<Interval> preventOverlapping(List<Interval> intervals){
+        if (intervals == null){
+            return new ArrayList<>();
+        }
+        if(intervals.isEmpty() || intervals.size() == 1)
             return intervals;
         Collections.sort(intervals, new IntervalComparator());
+        List<Interval> result = preventOverlappingLoop(intervals);
+        return result;
+    }
 
+    private List<Interval> preventOverlappingLoop(List<Interval> intervals) {
         Interval first = intervals.get(0);
         int start = first.getFirst();
         int end = first.getLast();
-        ArrayList<Interval> result = new ArrayList<Interval>();
+        List<Interval> result = new ArrayList<>();
         for (int i = 1; i < intervals.size(); i++) {
             Interval current = intervals.get(i);
             if (current.getFirst() <= end) {
@@ -42,7 +48,7 @@ public class IntervalBuilder {
         return result;
     }
 
-    public List<Knot> createKnottedRope(List<Interval> included, List<Interval> excluded) {
+    private List<Knot> createKnottedRope(List<Interval> included, List<Interval> excluded) {
         List<Knot> knottedRope = new ArrayList<>();
         for (Interval i : included) {
             knottedRope.add(new Knot(i.getFirst(), Knot.PointType.First));
@@ -52,12 +58,11 @@ public class IntervalBuilder {
             knottedRope.add(new Knot(i.getFirst(), Knot.PointType.FirstGap));
             knottedRope.add(new Knot(i.getLast(), Knot.PointType.LastGap));
         }
-        // sort the rope
         Collections.sort(knottedRope);
         return knottedRope;
     }
 
-    public List<Interval> resolve(List<Knot> knottedRope) {
+    private List<Interval> resolve(List<Knot> knottedRope) {
         List<Interval> result = new ArrayList<>();
         boolean isInterval = false;
         boolean isGap = false;
