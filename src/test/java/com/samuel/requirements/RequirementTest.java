@@ -17,7 +17,7 @@ import static org.junit.Assert.assertEquals;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class RequirementTest {
-    public static final int AVG_MAX = 100;
+    public static final int AVG_MAX = 1000;
     private Interval interval_10_100 = new Interval(10,100);
     private Interval interval_20_30 = new Interval(20,30);
     private Interval interval_10_19 = new Interval(10,19);
