@@ -2,7 +2,7 @@
 ## How to use it
 1- Generate Jar file
 ```bash
-mvn clean install
+mvn clean package
 ```
 2- Execute project with parameters
 ```bash
